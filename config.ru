@@ -7,7 +7,7 @@ require_relative 'github_wrapper'
 require_relative 'slack_wrapper'
 
 class App < Rack::App
-
+  REVIEWERS_COUNT = ENV['REVIEWERS_COUNT'] || 2
 
   desc 'assign_reviewers'
   post '/assign_reviewers' do
@@ -15,7 +15,7 @@ class App < Rack::App
     pull = params['pull_request']
 
     if params["action"] == 'labeled' && params['label']['name'] == 'Code Review'
-      requested_reviewers_count = 2 - pull['requested_reviewers'].size
+      requested_reviewers_count = REVIEWERS_COUNT - pull['requested_reviewers'].size
 
       return if requested_reviewers_count <= 0
 
